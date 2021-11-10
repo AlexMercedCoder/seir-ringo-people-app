@@ -6,7 +6,7 @@ import Show from "../pages/Show";
 function Main(props){
   const [people, setPeople] = useState(null);
 
-  const URL = "http://localhost:4000/people/";
+  const URL = "https://ringo-people-am.herokuapp.com/people/";
 
   const getPeople = async () => {
     const response = await fetch(URL);
@@ -25,6 +25,26 @@ function Main(props){
     getPeople();
   };
 
+  const updatePeople = async (person, id) => {
+    // make a put request to create people
+    await fetch(URL + id, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(person)
+    })
+    getPeople()
+  }
+
+  const deletePeople = async (id) => {
+    // make the delete request
+    await fetch(URL + id, {
+      method: "delete"
+    })
+    getPeople()
+  }
+
   useEffect(() => getPeople(), []);
 
   return (
@@ -38,6 +58,9 @@ function Main(props){
           render={(rp) => (
             <Show 
               {...rp}
+              people={people}
+              updatePeople={updatePeople}
+              deletePeople={deletePeople}
             />
           )}
         />
